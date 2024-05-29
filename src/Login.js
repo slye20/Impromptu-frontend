@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import './Login.css';
 
@@ -7,9 +8,8 @@ function Login({ onLogin }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Here you can add more validation or authentication logic
     if (username && password) {
-      onLogin();
+      onLogin(username);
     }
   };
 
@@ -23,6 +23,7 @@ function Login({ onLogin }) {
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
         <div className="form-group">
@@ -32,6 +33,7 @@ function Login({ onLogin }) {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
         <button type="submit">Login</button>
