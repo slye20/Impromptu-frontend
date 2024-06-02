@@ -11,10 +11,23 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
   const [items, setItems] = useState([]);
+  const [userRequests, setUserRequests] = useState({});
+
+  // Function to update the common screen
+  const updateCommonScreen = (newItem) => {
+    setItems((prevItems) => [...prevItems, newItem]);
+  };
 
   const handleLogin = (username) => {
     setUsername(username);
     setIsLoggedIn(true);
+    setUserRequests((prevRequests) => ({
+      ...prevRequests,
+      [username]: {
+        outgoingRequest: { consumer: [], producer: [] },
+        inProgress: [],
+      },
+    }));
   };
 
   const handleLogout = () => {
@@ -29,13 +42,50 @@ function App() {
       username,
       timestamp: new Date().toLocaleString(),
     };
-    setItems([...items, newItem]);
+
+    updateCommonScreen(newItem); // Update common screen
+
+    if (itemText.startsWith('Request:')) {
+      setUserRequests((prevRequests) => ({
+        ...prevRequests,
+        [username]: {
+          ...prevRequests[username],
+          outgoingRequest: {
+            ...prevRequests[username].outgoingRequest,
+            consumer: [...prevRequests[username].outgoingRequest.consumer, newItem],
+          },
+        },
+      }));
+    } else if (itemText.startsWith('Service:')) {
+      setUserRequests((prevRequests) => ({
+        ...prevRequests,
+        [username]: {
+          ...prevRequests[username],
+          outgoingRequest: {
+            ...prevRequests[username].outgoingRequest,
+            producer: [...prevRequests[username].outgoingRequest.producer, newItem],
+          },
+        },
+      }));
+    }
   };
 
   const toggleInProgress = (index) => {
-    setItems(items.map((item, i) => (
-      i === index ? { ...item, inProgress: !item.inProgress } : item
-    )));
+    const item = items[index];
+    setItems((prevItems) =>
+      prevItems.map((item, i) =>
+        i === index ? { ...item, inProgress: !item.inProgress } : item
+      )
+    );
+    if (!item.inProgress) {
+      setUserRequests((prevRequests) => ({
+        ...prevRequests,
+        [username]: {
+          ...prevRequests[username],
+          inProgress: [...prevRequests[username].inProgress, item],
+        },
+      }));
+    }
   };
 
   return (
@@ -43,9 +93,39 @@ function App() {
       <div className="App">
         {isLoggedIn ? (
           <Routes>
-            <Route path="/consumer" element={<Consumer items={items} addItem={addItem} toggleInProgress={toggleInProgress} username={username} />} />
-            <Route path="/producer" element={<Producer items={items} addItem={addItem} toggleInProgress={toggleInProgress} username={username} />} />
-            <Route path="/" element={<Home onLogout={handleLogout} />} />
+            <Route
+              path="/consumer"
+              element={
+                <Consumer
+                  items={items}
+                  addItem={addItem}
+                  toggleInProgress={toggleInProgress}
+                  username={username}
+                  setUserRequests={setUserRequests}
+                />
+              }
+            />
+            <Route
+              path="/producer"
+              element={
+                <Producer
+                  items={items}
+                  addItem={addItem}
+                  toggleInProgress={toggleInProgress}
+                  username={username}
+                  setUserRequests={setUserRequests}
+                />
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <Home
+                  onLogout={handleLogout}
+                  userRequests={userRequests[username]}
+                />
+              }
+            />
           </Routes>
         ) : (
           <Login onLogin={handleLogin} />
