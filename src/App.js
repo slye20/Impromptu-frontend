@@ -1,22 +1,31 @@
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import WelcomeBanner from "./Components/WelcomeBanner";
+import TaskManager from "./Components/TaskManager";
+import CommonScreen from "./Components/CommonScreen";
+import Login from "./Components/Login";
+//import Home from './Components/Home'; // Assuming Home is another component you might use
 
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
-import Login from './Login';
-import Home from './Home';
-import Consumer from './Consumer';
-import Producer from './Producer';
+function getStoredTasks() {
+  const rawTasks = window.localStorage.getItem("tasks");
+  if (rawTasks != null) {
+    return JSON.parse(rawTasks);
+  } else {
+    return [];
+  }
+}
+
+
+function setStoredTasks(newTasks) {
+  window.localStorage.setItem("tasks", JSON.stringify(newTasks));
+}
 
 function App() {
+  const [tasks, setTasks] = useState(getStoredTasks());
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
   const [items, setItems] = useState([]);
+  const [username, setUsername] = useState('');
   const [userRequests, setUserRequests] = useState({});
-
-  // Function to update the common screen
-  const updateCommonScreen = (newItem) => {
-    setItems((prevItems) => [...prevItems, newItem]);
-  };
 
   const handleLogin = (username) => {
     setUsername(username);
@@ -35,103 +44,29 @@ function App() {
     setIsLoggedIn(false);
   };
 
-  const addItem = (itemText) => {
-    const newItem = {
-      text: itemText,
-      inProgress: false,
-      username,
-      timestamp: new Date().toLocaleString(),
-    };
+  useEffect(() => {
+    setStoredTasks(tasks);
+  }, [tasks]);
 
-    updateCommonScreen(newItem); // Update common screen
-
-    if (itemText.startsWith('Request:')) {
-      setUserRequests((prevRequests) => ({
-        ...prevRequests,
-        [username]: {
-          ...prevRequests[username],
-          outgoingRequest: {
-            ...prevRequests[username].outgoingRequest,
-            consumer: [...prevRequests[username].outgoingRequest.consumer, newItem],
-          },
-        },
-      }));
-    } else if (itemText.startsWith('Service:')) {
-      setUserRequests((prevRequests) => ({
-        ...prevRequests,
-        [username]: {
-          ...prevRequests[username],
-          outgoingRequest: {
-            ...prevRequests[username].outgoingRequest,
-            producer: [...prevRequests[username].outgoingRequest.producer, newItem],
-          },
-        },
-      }));
-    }
+  // Function to update the common screen
+  const updateCommonScreen = (newItem) => {
+    setItems((prevItems) => [...prevItems, newItem]);
   };
 
-  const toggleInProgress = (index) => {
-    const item = items[index];
-    setItems((prevItems) =>
-      prevItems.map((item, i) =>
-        i === index ? { ...item, inProgress: !item.inProgress } : item
-      )
-    );
-    if (!item.inProgress) {
-      setUserRequests((prevRequests) => ({
-        ...prevRequests,
-        [username]: {
-          ...prevRequests[username],
-          inProgress: [...prevRequests[username].inProgress, item],
-        },
-      }));
-    }
-  };
 
   return (
-    <Router>
-      <div className="App">
-        {isLoggedIn ? (
-          <Routes>
-            <Route
-              path="/consumer"
-              element={
-                <Consumer
-                  items={items}
-                  addItem={addItem}
-                  toggleInProgress={toggleInProgress}
-                  username={username}
-                  setUserRequests={setUserRequests}
-                />
-              }
-            />
-            <Route
-              path="/producer"
-              element={
-                <Producer
-                  items={items}
-                  addItem={addItem}
-                  toggleInProgress={toggleInProgress}
-                  username={username}
-                  setUserRequests={setUserRequests}
-                />
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <Home
-                  onLogout={handleLogout}
-                  userRequests={userRequests[username]}
-                />
-              }
-            />
-          </Routes>
-        ) : (
-          <Login onLogin={handleLogin} />
-        )}
-      </div>
-    </Router>
+    <div className="App">
+    {isLoggedIn ? (
+      <>
+      <WelcomeBanner numTasks={tasks.length} username={username} onLogout={handleLogout}/>
+      <TaskManager tasks={tasks} setTasks={setTasks} />
+      <CommonScreen />
+    </>
+    ) : (
+    <Login onLogin={handleLogin}/>
+    )
+  }
+  </div>
   );
 }
 

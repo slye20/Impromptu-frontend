@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Producer.css';
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 function Producer({ items, addItem, toggleInProgress, username, setUserRequests }) {
   const [service, setService] = useState('');
@@ -16,9 +21,30 @@ function Producer({ items, addItem, toggleInProgress, username, setUserRequests 
 
   return (
     <div className="producer">
-      <button onClick={() => navigate('/')}>Back</button>
-      <h2>Producer</h2>
+		<AppBar position="fixed">
+          <Toolbar>
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+              Impromptu's Producer
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          	<Button 
+          	  variant="contained" 
+          	  color="warning" 
+          	  size="medium" 
+          	  onClick={() => navigate('/')}
+          	  sx={{ ml: 2 }} // Optional margin-left to add some space between text and button
+          	>
+            Back
+          	</Button>
+        	</Box>
+          </Toolbar>
+        </AppBar>
+     
+		<Box sx={{ pt: 8 }}> {/* Adjust the padding-top as needed */}
+        <strong>What service would you like to provide?</strong>
+     	</Box>
       <form onSubmit={handleSubmit}>
+
 	<input
 	  type="text"
 	  value={service}
@@ -26,9 +52,14 @@ function Producer({ items, addItem, toggleInProgress, username, setUserRequests 
 	  placeholder="Enter your service"
 	  required
 	/>
-	<button type="submit">Submit</button>
-      </form>
-      <div className="common-screen">
+	<br></br>
+	<Button type="submit" color = "success">Submit
+	</Button>
+    </form>
+
+
+
+    <div className="common-screen">
 	<h2>Common Screen</h2>
 	<ul>
 	  {items.map((item, index) => (

@@ -1,4 +1,4 @@
-
+/*
 .producer {
   text-align: center;
   margin-top: 20px;
@@ -15,7 +15,7 @@
   border: 1px solid #ccc;
 }
 
-.producer button {
+/*.producer button {
   padding: 10px;
   background-color: #28a745;
   color: white;
@@ -62,3 +62,4 @@
 .producer .common-screen button:hover {
   background-color: #0056b3;
 }
+*/
