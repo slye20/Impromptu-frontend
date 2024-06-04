@@ -26,14 +26,10 @@ function setStoredTasks(newTasks) {
 
 function App() {
   const [tasks, setTasks] = useState(getStoredTasks());
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [items, setItems] = useState([]);
-  const [username, setUsername] = useState("");
   const [userRequests, setUserRequests] = useState({});
 
   const handleLogin = (username) => {
-    setUsername(username);
-    setIsLoggedIn(true);
     setUserRequests((prevRequests) => ({
       ...prevRequests,
       [username]: {
@@ -44,8 +40,8 @@ function App() {
   };
 
   const handleLogout = () => {
-    setUsername("");
-    setIsLoggedIn(false);
+    localStorage.removeItem("username");
+    localStorage.removeItem("token");
   };
 
   useEffect(() => {
@@ -58,21 +54,28 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {isLoggedIn ? (
-        <>
-          <WelcomeBanner
-            numTasks={tasks.length}
-            username={username}
-            onLogout={handleLogout}
-          />
-          <TaskManager tasks={tasks} setTasks={setTasks} />
-          <CommonScreen />
-        </>
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
-    </div>
+    <Router>
+      <div className="App">
+        {localStorage.getItem("username") ? (
+          <>
+            <WelcomeBanner
+              numTasks={tasks.length}
+              username={localStorage.getItem("username")}
+              onLogout={handleLogout}
+            />
+            <TaskManager tasks={tasks} setTasks={setTasks} />
+            <CommonScreen items={items} />
+            {/* Added items prop to CommonScreen if needed */}
+          </>
+        ) : (
+          <Routes>
+            <Route path="/" element={<Login onLogin={handleLogin} />} />
+            {/* Redirect to main if logged in */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        )}
+      </div>
+    </Router>
   );
 }
 
