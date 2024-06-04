@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Consumer.css';
 
-function Consumer({ items, addItem, toggleInProgress, username }) {
+function Consumer({ items, addItem, toggleInProgress, username, setUserRequests }) {
   const [request, setRequest] = useState('');
   const navigate = useNavigate();
 
