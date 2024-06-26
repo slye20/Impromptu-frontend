@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import WelcomeBanner from "./Components/WelcomeBanner";
 import TaskManager from "./Components/TaskManager";
 import CommonScreen from "./Components/CommonScreen";
@@ -15,7 +20,6 @@ function getStoredTasks() {
   }
 }
 
-
 function setStoredTasks(newTasks) {
   window.localStorage.setItem("tasks", JSON.stringify(newTasks));
 }
@@ -24,7 +28,7 @@ function App() {
   const [tasks, setTasks] = useState(getStoredTasks());
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [items, setItems] = useState([]);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   const [userRequests, setUserRequests] = useState({});
 
   const handleLogin = (username) => {
@@ -40,8 +44,8 @@ function App() {
   };
 
   const handleLogout = () => {
-    setUsername('');
-    setIsLoggedIn(false);
+    localStorage.removeItem("username");
+    localStorage.removeItem("token");
   };
 
   useEffect(() => {
@@ -57,14 +61,17 @@ function App() {
     <div className="App">
       {isLoggedIn ? (
         <>
-          <WelcomeBanner numTasks={tasks.length} username={username} onLogout={handleLogout}/>
+          <WelcomeBanner
+            numTasks={tasks.length}
+            username={username}
+            onLogout={handleLogout}
+          />
           <TaskManager username={username} tasks={tasks} setTasks={setTasks} />
           <CommonScreen />
         </>
       ) : (
-        <Login onLogin={handleLogin}/>
-      )
-      }
+        <Login onLogin={handleLogin} />
+      )}
     </div>
   );
 }

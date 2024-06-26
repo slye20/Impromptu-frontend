@@ -3,20 +3,25 @@ import { useState } from "react";
 import TaskList from "./TaskList";
 import { Button, Container, Box, TextField } from "@mui/material";
 
-
-function TaskManager({username, tasks, setTasks }) {
+function TaskManager({ username, tasks, setTasks }) {
   const [newTask, setNewTask] = useState("");
   //name = username;
 
   function handleNewServiceSubmit(event) {
     event.preventDefault();
-    setTasks([{ task: `${username}'s Service: ${newTask}`, completed: false }, ...tasks]);
+    setTasks([
+      { task: `${username}'s Service: ${newTask}`, completed: false },
+      ...tasks,
+    ]);
     setNewTask("");
   }
 
   function handleNewRequestSubmit(event) {
     event.preventDefault();
-    setTasks([{ task: `${username}'s Request: ${newTask}`, completed: false }, ...tasks]);
+    setTasks([
+      { task: `${username}'s Request: ${newTask}`, completed: false },
+      ...tasks,
+    ]);
     setNewTask("");
   }
 
