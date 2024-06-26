@@ -30,6 +30,7 @@ export default function CommonScreen() {
       <Button variant="contained" onClick={handleRefreshClick}>
         Refresh Table
       </Button>
+      {fact}
     </center>
   );
 }
