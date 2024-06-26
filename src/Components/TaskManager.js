@@ -5,6 +5,7 @@ import { Button, Container, Box, TextField } from "@mui/material";
 
 function TaskManager({ username, tasks, setTasks }) {
   const [newTask, setNewTask] = useState("");
+  const [newTaskType, setTaskType] = useState("");
   //name = username;
 
   function handleNewServiceSubmit(event) {
@@ -13,7 +14,9 @@ function TaskManager({ username, tasks, setTasks }) {
       { task: `${username}'s Service: ${newTask}`, completed: false },
       ...tasks,
     ]);
-    setNewTask("");
+    // want to set identifier for tasks in array then send to task list to map.
+    //setNewTask("");
+    //setTaskType()
   }
 
   function handleNewRequestSubmit(event) {

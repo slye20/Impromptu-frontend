@@ -36,7 +36,7 @@ const columns = [
 
 ];
 
-
+// pull from api and send here
 export default function StickyHeadTable({username, tasks, setTasks}) {
     function createData(name, code, population, size) {
         const density = population / size;
