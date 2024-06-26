@@ -3,28 +3,11 @@ import { useState } from "react";
 import TaskList from "./TaskList";
 import { Button, Container, Box, TextField } from "@mui/material";
 
-function TaskManager({ username, tasks, setTasks }) {
+function TaskManager({ tasks, setTasks }) {
   const [newTask, setNewTask] = useState("");
-  const [newTaskType, setTaskType] = useState("");
-  //name = username;
-
-  function handleNewServiceSubmit(event) {
+  function handleNewTaskSubmit(event) {
     event.preventDefault();
-    setTasks([
-      { task: `${username}'s Service: ${newTask}`, completed: false },
-      ...tasks,
-    ]);
-    // want to set identifier for tasks in array then send to task list to map.
-    //setNewTask("");
-    //setTaskType()
-  }
-
-  function handleNewRequestSubmit(event) {
-    event.preventDefault();
-    setTasks([
-      { task: `${username}'s Request: ${newTask}`, completed: false },
-      ...tasks,
-    ]);
+    setTasks([{ task: newTask, completed: false }, ...tasks]);
     setNewTask("");
   }
 
@@ -42,22 +25,13 @@ function TaskManager({ username, tasks, setTasks }) {
           />
           <br />
           <Button
-            size="medium"
+            size="large"
             variant="contained"
             type="submit"
-            onClick={handleNewServiceSubmit}
+            onClick={handleNewTaskSubmit}
             style={{ margin: "10px" }}
           >
-            Service
-          </Button>
-          <Button
-            size="medium"
-            variant="contained"
-            type="submit"
-            onClick={handleNewRequestSubmit}
-            style={{ margin: "10px" }}
-          >
-            Request
+            Add
           </Button>
         </form>
         {tasks.length > 0 ? (

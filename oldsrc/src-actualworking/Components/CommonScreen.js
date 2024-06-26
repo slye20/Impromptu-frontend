@@ -25,12 +25,11 @@ export default function CommonScreen() {
   return (
     <center>
       <h2>Live Table of Request and Service</h2>
-      <StickyHeadTable />
+      <StickyHeadTable/>
       <br></br>
       <Button variant="contained" onClick={handleRefreshClick}>
         Refresh Table
       </Button>
-      {fact}
     </center>
   );
 }
