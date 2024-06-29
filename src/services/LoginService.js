@@ -1,7 +1,7 @@
 import { API_URL } from "../constants/constants";
 
 // user is an object with username, password, and email keys.
-const apiLogin = async (user, navigate, setErrors, onSuccess) => {
+const apiLogin = async (user, navigate, setErrors) => {
   try {
     const response = await fetch(`${API_URL}/login/`, {
       method: "POST",
@@ -26,9 +26,7 @@ const apiLogin = async (user, navigate, setErrors, onSuccess) => {
     localStorage.setItem("username", data.user.username);
     localStorage.setItem("token", data.token);
 
-    onSuccess(); // Call the success callback
-
-    //navigate("/");
+    navigate("/");
   } catch (error) {
     console.error(error);
     setErrors(error.message);

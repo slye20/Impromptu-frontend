@@ -5,20 +5,15 @@ import apiLogin from "../services/LoginService.js";
 import { useNavigate } from "react-router-dom";
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 
-function Login({ onLogin }) {
+function Login() {
   const [user, setUser] = useState({ username: "", email: "", password: "" });
   const [errors, setErrors] = useState("");
   const navigate = useNavigate();
 
-  const handleSuccess = () => {
-    // Call the onLogin prop with the username upon successful login
-    onLogin(user.username);
-  };
-
   const handleSubmit = (event) => {
     // Prevent refresh of page
     event.preventDefault();
-    apiLogin(user, navigate, setErrors, handleSuccess);
+    apiLogin(user, navigate, setErrors);
   };
 
   return (
